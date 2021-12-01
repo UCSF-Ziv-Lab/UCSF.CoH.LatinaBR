@@ -50,7 +50,6 @@ for (i in seq_along(amp.peak)) {
   Region <- subset(thres.gene, Chrom == chr & txStart > reg.start - 5000000 & txEnd < reg.end + 5000000)
   Region <- Region[!duplicated(Region$Gene.Symbol), ]
   row.names(Region) <- Region$Gene.Symbol
-  Region <- Region[order(Region$txStart), ]
   
   cols <- grep("^SC", colnames(Region))
   Region$sum2   <- rowSums(Region[, cols] == +2)
@@ -58,6 +57,7 @@ for (i in seq_along(amp.peak)) {
   Region$sum_m2 <- rowSums(Region[, cols] == -2)
 
   region <- Region[, c("txStart", "txEnd", "sum2", "sum_m1", "sum_m2")] # generate input file with a few relevant variable for ggplot
+  region <- region[order(region$txStart), ]
 
   gene_plot <- ggplot(region) +
     geom_area(aes(x = txStart, y = (sum2 / 1.46)), fill = "red", stat = "identity") +
