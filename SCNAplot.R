@@ -71,9 +71,7 @@ for (i in seq_along(amp.peak)) {
     mytheme
 
   imgfile <- paste0("SCNA2_5Mb_test", peak_name, gene_name, ".png")
-  png(file.path("plot", imgfile), width = 10 * 200, height = 7 * 200, res = 300, pointsize = 8)
-  plot(gene_plot)
-  dev.off()
+  ggsave(file.path("plot", imgfile), plot = gene_plot, device = png, width = 10*200, height = 7*200, units = "px", dpi = 300, pointsize = 8)
   
   csvfile <- paste0("SCNA2_gene_5Mb", peak_name, gene_name, ".csv")
   write.csv(region, file.path("plot", csvfile))
