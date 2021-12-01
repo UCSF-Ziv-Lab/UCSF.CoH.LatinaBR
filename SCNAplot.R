@@ -4,13 +4,22 @@ library(ggplot2)
 ## Folder where to write plots
 if (!dir.exists("plot")) dir.create("plot")
 
+## Read GTF annotations
+gtf <- read.csv("GTF_withEntrezID.csv")
+## Map {chr1, chr2, ..., chrX, chrY, chrM} to 1:25
+## Ignore '6_mann_hap4', 'Un_gl000223', etc.
+chrs <- gsub(gtf$chrom, pattern = "chr", replacement = "")
+chrs[chrs == "X"] <- "23"
+chrs[chrs == "Y"] <- "24"
+chrs[chrs == "M"] <- "25"
+chrs <- suppressWarnings(as.integer(chrs))
+gtf$Chrom <- chrs
+
 ## Read data
 peak <- read.csv("gistic_peaks_s5m7q05v2.csv")
 thresholded <- read.delim("s5m7q05borad.all_thresholded.by_genes.txt")
-gtf <- read.csv("GTF_withEntrezID.csv", header = TRUE)
-
-gtf$Chrom <- as.numeric(gsub(gtf$chrom, pattern = "chr", replacement = ""))
 thres.gene <- merge(thresholded, gtf, by.x = "Locus.ID", by.y = "ENTREZID")
+
 amp.peak <- peak$Descriptor[peak$SCNA == "gain"]
 # loss.peak <- peak$Descriptor[peak$SCNA == "loss"]
 
