@@ -1,16 +1,23 @@
 #### to make GISTIC peak plots using thresholded GISTIC data
-peak <- read.csv("X:/LAB/lab/Latina_breast_cancer/GISTIC/latina146/gistic_peaks_s5m7q05v2.csv")
-thresholded <- read.delim("X:/LAB/lab/Latina_breast_cancer/GISTIC/latina146/seg5mar7q05broad/s5m7q05borad.all_thresholded.by_genes.txt")
-gif <- read.csv("X:/LAB/lab/OvarianCancer/geneAssociation/GTF_withEntrezID.csv", head = T)
+library(ggplot2)
+
+## Folder where to write plots
+if (!dir.exists("plot")) dir.create("plot")
+
+## Read data
+peak <- read.csv("gistic_peaks_s5m7q05v2.csv")
+thresholded <- read.delim("s5m7q05borad.all_thresholded.by_genes.txt")
+gif <- read.csv("GTF_withEntrezID.csv", header = TRUE)
+
 gif$Chrom <- as.numeric(gsub(gif$chrom, pattern = "chr", replacement = ""))
 thres.gene <- merge(thresholded, gif, by.x = "Locus.ID", by.y = "ENTREZID")
 amp.peak <- peak$Descriptor[which(peak$SCNA == "gain")]
-# loss.peak<-peak$Descriptor[which(peak$SCNA=="loss")]
+# loss.peak <- peak$Descriptor[which(peak$SCNA == "loss")]
 
 mytheme <- theme(
   strip.background = element_rect(fill = "white"),
   strip.text.x = element_text(size = 14, colour = "brown"),
-  plot.title = element_text(face = "bold.italic", size = "14", color = "brown"),
+  plot.title = element_text(face = "bold.italic", size = 14, color = "brown"),
   axis.title = element_text(face = "bold.italic", size = 16, color = "brown"),
   axis.text = element_text(face = "bold", size = 12, color = "darkblue"),
   panel.background = element_rect(fill = "white", color = "darkblue"),
@@ -22,7 +29,7 @@ mytheme <- theme(
 )
 
 # amplification plots
-for (i in 1:length(amp.peak)) {
+for (i in seq_along(amp.peak)) {
   # i=24
   peak_name <- amp.peak[i]
   gene_name <- peak$candidate_gene[which(peak$Descriptor == peak_name & peak$SCNA == "gain")]
@@ -39,18 +46,23 @@ for (i in 1:length(amp.peak)) {
   Region$sum_m1 <- sapply(1:nrow(Region), function(i) length(grep(-1, Region[i, 4:149])))
   Region$sum_m2 <- sapply(1:nrow(Region), function(i) length(grep(-2, Region[i, 4:149])))
   region <- Region[, c(155, 156, 164:166)] # generate input file with a few relevant variable for ggplot
+  
   gene_plot <- ggplot(region) +
     geom_area(aes(x = `txStart`, y = (`sum2` / 1.46)), fill = "red", stat = "identity") +
-    # geom_area(aes(x=`txStart`, y=-((`sum_m1`+`sum_m2`)/1.46)), fill="blue", stat="identity") +  # not good to plot CN loss using this method
+    # geom_area(aes(x=`txStart`, y=-((`sum_m1`+`sum_m2`) / 1.46)), fill="blue", stat="identity") +  # not good to plot CN loss using this method
     geom_vline(xintercept = TSS) +
     ylim(0, max(region$sum2 / 1.46 + 2)) +
     xlab(chr_nam) +
     scale_x_continuous(breaks = seq(from = min(region$txStart), to = max(region$txEnd), by = 2500000)) +
     ylab("% CN Amplifications in 146 samples") +
-    geom_text(mapping = aes(x = TSS, y = max(sum2 / 1.46 + 0.5), label = gene_name, hjust = -.5, vjust = -.5)) +
+    geom_text(mapping = aes(x = TSS, y = max(sum2 / 1.46 + 0.5), label = gene_name, hjust = -0.5, vjust = -0.5)) +
     mytheme
-  png(paste0("X:/LAB/lab/Latina_breast_cancer/GISTIC/latina146/plot/SCNA2_5Mb_test", peak_name, gene_name, ".png"), width = 10 * 200, height = 7 * 200, res = 300, pointsize = 8)
+
+  imgfile <- paste0("SCNA2_5Mb_test", peak_name, gene_name, ".png")
+  png(file.path("plot", imgfile), width = 10 * 200, height = 7 * 200, res = 300, pointsize = 8)
   plot(gene_plot)
   dev.off()
-  write.csv(region, paste0("X:/LAB/lab/Latina_breast_cancer/GISTIC/latina146/plot/SCNA2_gene_5Mb", peak_name, gene_name, ".csv"))
+  
+  csvfile <- paste0("SCNA2_gene_5Mb", peak_name, gene_name, ".csv")
+  write.csv(region, file.path("plot", csvfile))
 }
