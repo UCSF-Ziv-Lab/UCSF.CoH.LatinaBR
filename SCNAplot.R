@@ -51,9 +51,12 @@ for (i in seq_along(amp.peak)) {
   Region <- Region[!duplicated(Region$Gene.Symbol), ]
   row.names(Region) <- Region$Gene.Symbol
   Region <- Region[order(Region$txStart), ]
-  Region$sum2 <- sapply(1:nrow(Region), function(i) length(grep(2, Region[i, 4:149])))
-  Region$sum_m1 <- sapply(1:nrow(Region), function(i) length(grep(-1, Region[i, 4:149])))
-  Region$sum_m2 <- sapply(1:nrow(Region), function(i) length(grep(-2, Region[i, 4:149])))
+  
+  cols <- grep("^SC", colnames(Region))
+  Region$sum2   <- sapply(1:nrow(Region), function(i) sum(Region[i, cols] == +2))
+  Region$sum_m1 <- sapply(1:nrow(Region), function(i) sum(Region[i, cols] == -1))
+  Region$sum_m2 <- sapply(1:nrow(Region), function(i) sum(Region[i, cols] == -2))
+
   region <- Region[, c(155, 156, 164:166)] # generate input file with a few relevant variable for ggplot
   
   gene_plot <- ggplot(region) +
