@@ -11,8 +11,8 @@ gif <- read.csv("GTF_withEntrezID.csv", header = TRUE)
 
 gif$Chrom <- as.numeric(gsub(gif$chrom, pattern = "chr", replacement = ""))
 thres.gene <- merge(thresholded, gif, by.x = "Locus.ID", by.y = "ENTREZID")
-amp.peak <- peak$Descriptor[which(peak$SCNA == "gain")]
-# loss.peak <- peak$Descriptor[which(peak$SCNA == "loss")]
+amp.peak <- peak$Descriptor[peak$SCNA == "gain"]
+# loss.peak <- peak$Descriptor[peak$SCNA == "loss"]
 
 mytheme <- theme(
   strip.background = element_rect(fill = "white"),
@@ -32,11 +32,11 @@ mytheme <- theme(
 for (i in seq_along(amp.peak)) {
   # i=24
   peak_name <- amp.peak[i]
-  gene_name <- peak$candidate_gene[which(peak$Descriptor == peak_name & peak$SCNA == "gain")]
-  TSS <- thres.gene$txStart[which(thres.gene$gene == gene_name)]
-  reg.start <- peak$region_start[which(peak$Descriptor == peak_name & peak$SCNA == "gain")]
-  reg.end <- peak$region_end[which(peak$Descriptor == peak_name & peak$SCNA == "gain")]
-  chr <- peak$chr[which(peak$Descriptor == peak_name & peak$SCNA == "gain")]
+  gene_name <- peak$candidate_gene[peak$Descriptor == peak_name & peak$SCNA == "gain"]
+  TSS <- thres.gene$txStart[thres.gene$gene == gene_name]
+  reg.start <- peak$region_start[peak$Descriptor == peak_name & peak$SCNA == "gain"]
+  reg.end <- peak$region_end[peak$Descriptor == peak_name & peak$SCNA == "gain"]
+  chr <- peak$chr[peak$Descriptor == peak_name & peak$SCNA == "gain"]
   chr_nam <- paste("Chr", chr)
   Region <- subset(thres.gene, Chrom == chr & txStart > reg.start - 5000000 & txEnd < reg.end + 5000000)
   Region <- Region[!duplicated(Region$Gene.Symbol), ]
