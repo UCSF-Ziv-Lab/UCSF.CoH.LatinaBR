@@ -60,8 +60,8 @@ for (i in seq_along(amp.peak)) {
   region <- Region[, c("txStart", "txEnd", "sum2", "sum_m1", "sum_m2")] # generate input file with a few relevant variable for ggplot
   
   gene_plot <- ggplot(region) +
-    geom_area(aes(x = `txStart`, y = (`sum2` / 1.46)), fill = "red", stat = "identity") +
-    # geom_area(aes(x=`txStart`, y=-((`sum_m1`+`sum_m2`) / 1.46)), fill="blue", stat="identity") +  # not good to plot CN loss using this method
+    geom_area(aes(x = txStart, y = (sum2 / 1.46)), fill = "red", stat = "identity") +
+    # geom_area(aes(x = txStart, y = -((sum_m1 + sum_m2) / 1.46)), fill = "blue", stat = "identity") +  # not good to plot CN loss using this method
     geom_vline(xintercept = TSS) +
     ylim(0, max(region$sum2 / 1.46 + 2)) +
     xlab(chr_nam) +
