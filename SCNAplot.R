@@ -57,7 +57,7 @@ for (i in seq_along(amp.peak)) {
   Region$sum_m1 <- sapply(1:nrow(Region), function(i) sum(Region[i, cols] == -1))
   Region$sum_m2 <- sapply(1:nrow(Region), function(i) sum(Region[i, cols] == -2))
 
-  region <- Region[, c(155, 156, 164:166)] # generate input file with a few relevant variable for ggplot
+  region <- Region[, c("txStart", "txEnd", "sum2", "sum_m1", "sum_m2")] # generate input file with a few relevant variable for ggplot
   
   gene_plot <- ggplot(region) +
     geom_area(aes(x = `txStart`, y = (`sum2` / 1.46)), fill = "red", stat = "identity") +
