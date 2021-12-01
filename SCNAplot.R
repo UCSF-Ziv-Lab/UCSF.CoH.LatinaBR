@@ -7,10 +7,10 @@ if (!dir.exists("plot")) dir.create("plot")
 ## Read data
 peak <- read.csv("gistic_peaks_s5m7q05v2.csv")
 thresholded <- read.delim("s5m7q05borad.all_thresholded.by_genes.txt")
-gif <- read.csv("GTF_withEntrezID.csv", header = TRUE)
+gtf <- read.csv("GTF_withEntrezID.csv", header = TRUE)
 
-gif$Chrom <- as.numeric(gsub(gif$chrom, pattern = "chr", replacement = ""))
-thres.gene <- merge(thresholded, gif, by.x = "Locus.ID", by.y = "ENTREZID")
+gtf$Chrom <- as.numeric(gsub(gtf$chrom, pattern = "chr", replacement = ""))
+thres.gene <- merge(thresholded, gtf, by.x = "Locus.ID", by.y = "ENTREZID")
 amp.peak <- peak$Descriptor[peak$SCNA == "gain"]
 # loss.peak <- peak$Descriptor[peak$SCNA == "loss"]
 
