@@ -1,0 +1,21 @@
+Package: UCSF.CoH.LatinaBR
+Version: 0.0.0-9000
+Depends:
+    R (>= 4.0.0)
+Imports:
+    utils,
+    ggplot2,
+    shiny
+Title: UCSF-CoH Latina Breast Cancer Study
+Authors@R: c(
+    person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
+                                  email = "henrikb@braju.com"),
+    person("Yuan Chun", "Ding", role=c("aut", "cph"))
+    )
+Description: Tools used for the UCSF-CoH latina breast cancer study.
+License: LGPL (>= 2.1)
+LazyLoad: TRUE
+URL: https://github.com/UCSF-Ziv-Lab/UCSF_CoH-LatinaBR
+BugReports: https://github.com/UCSF-Ziv-Lab/UCSF_CoH-LatinaBR/issues
+RoxygenNote: 7.1.2
+Roxygen: list(markdown = TRUE)
