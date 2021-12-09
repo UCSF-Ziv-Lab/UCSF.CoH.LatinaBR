@@ -4,6 +4,10 @@ suppressPackageStartupMessages(library(ggplot2))
 ## Folder where to write plots
 if (!dir.exists("plot")) dir.create("plot")
 
+## Illustrate effect of Bug #1
+## (https://github.com/UCSF-Ziv-Lab/UCSF_CoH-LatinaBR/issues/1)
+show_bug <- TRUE
+
 ## Read GTF annotations
 gtf <- read.csv("GTF_withEntrezID.csv")
 ## Map {chr1, chr2, ..., chrX, chrY, chrM} to 1:25
@@ -67,8 +71,14 @@ for (i in seq_along(peaks)) {
   y <- region[[field]]
   col <- switch(type, gain = "red", loss = "blue")
   
-  gene_plot <- ggplot(region) +
-    geom_area(aes(x = txStart, y = y / 1.46), fill = col, stat = "identity") +
+  gene_plot <- ggplot(region)
+  
+  if (show_bug) {
+    gene_plot <- gene_plot + geom_area(aes(x = txStart, y = (sum2 - sum_m2) / 1.46), fill = "orange", stat = "identity")
+  }
+  
+  gene_plot <- gene_plot +
+  geom_area(aes(x = txStart, y = y / 1.46), fill = col, stat = "identity") +
     # geom_area(aes(x = txStart, y = -((sum_m1 + sum_m2) / 1.46)), fill = "blue", stat = "identity") +  # not good to plot CN loss using this method
     xlab(chr_nam) +
     ylab(sprintf("%% CN %s in %d samples", type, nbr_of_samples)) +
