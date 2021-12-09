@@ -1,7 +1,5 @@
 Package: UCSF.CoH.LatinaBR
 Version: 0.0.0-9000
-Depends:
-    R (>= 4.0.0)
 Imports:
     utils,
     ggplot2,
