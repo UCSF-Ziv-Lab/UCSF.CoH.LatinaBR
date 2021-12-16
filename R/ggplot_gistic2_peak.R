@@ -1,6 +1,9 @@
 #' @import ggplot2
 #' @export
 ggplot_gistic2_peak <- function(peak_name, padding = 5e6, type = c("gain", "loss"), peak, thres.gene, show_bug = FALSE) {
+  ## To please R CMD check
+  Chrom <- sum2 <- sum_m2 <- txEnd <- txStart <- NULL
+  
   type <- match.arg(type)
   
   gene_name <- peak$candidate_gene[peak$Descriptor == peak_name & peak$SCNA == type]
