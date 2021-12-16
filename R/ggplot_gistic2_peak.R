@@ -78,5 +78,14 @@ ggplot_gistic2_peak <- function(peak_name, padding = 5e6, type = c("gain", "loss
     legend.text = element_text(size = 14, face = "bold")
   )
 
+  attr(gg, "params") <- list(
+    peak_name    = peak_name,
+    reg.start    = reg.start,
+    reg.end      = reg.end,
+    gene_name    = gene_name,
+    TSS          = TSS,
+    sample_names = colnames(Region)[cols]
+  )
+  
   gg
 } ## plot_gistic2_peak()
