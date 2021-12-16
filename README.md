@@ -1,3 +1,7 @@
+<div id="badges"><!-- pkgdown markup -->
+<a href="https://github.com/UCSF-Ziv-Lab/UCSF_CoH-LatinaBR/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/UCSF-Ziv-Lab/UCSF_CoH-LatinaBR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R CMD check status"/></a>
+</div>
+
 # UCSF-CoH Latina Breast Cancer Study
 
 ## Shiny app to browser GISTIC peaks
