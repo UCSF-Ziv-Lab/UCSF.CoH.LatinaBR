@@ -2,7 +2,7 @@
 #' @export
 ggplot_gistic2_peak <- function(peak_name, padding = 5e6, type = c("gain", "loss"), peak, thres.gene, show_bug = FALSE) {
   ## To please R CMD check
-  Chrom <- sum2 <- sum_m2 <- txEnd <- txStart <- NULL
+  Chrom <- sum2 <- sum_m2 <- txEnd <- txStart <- txAdjustedEnd <- NULL
   
   type <- match.arg(type)
   
@@ -31,19 +31,28 @@ ggplot_gistic2_peak <- function(peak_name, padding = 5e6, type = c("gain", "loss
   field <- switch(type, gain = "sum2", loss = "sum_m2")
   y <- region[[field]]
   col <- switch(type, gain = "red", loss = "blue")
-  
+
+  ## Adjust data to get step-wise line plots with geom_step() and geom_rect().
+  ## Since (txStart, txEnd) regions are disjoint, we use
+  ## (txStart, txAdjustedEnd) instead, where 'txAdjustedEnd' is the previous
+  ## 'txStart' minus one.
+  region$txAdjustedEnd <- c(region$txStart[-1]-1, region$txEnd[nrow(region)])
+
   gg <- ggplot(region)
   
   if (show_bug) {
-    gg <- gg + geom_area(aes(x = txStart, y = (sum2 - sum_m2) / 1.46), fill = "orange", stat = "identity")
+    gg <- gg + geom_step(aes(x = txStart, y = (sum2 - sum_m2) / 1.46), fill = "orange", stat = "identity")
+    gg <- gg + geom_rect(aes(xmin = txStart, xmax = txAdjustedEnd, ymin = 0, ymax = (sum2 - sum_m2) / 1.46), fill = "orange")
   }
   
   gg <- gg +
-  geom_area(aes(x = txStart, y = y / 1.46), fill = col, stat = "identity") +
+  geom_step(aes(x = txStart, y = y / 1.46), fill = col, stat = "identity") +
+  geom_rect(aes(xmin = txStart, xmax = txAdjustedEnd, ymin = 0, ymax = y / 1.46), fill = "red") +
     # geom_area(aes(x = txStart, y = -((sum_m1 + sum_m2) / 1.46)), fill = "blue", stat = "identity") +  # not good to plot CN loss using this method
     xlab(chr_nam) +
     ylab(sprintf("%% CN %s in %d samples", type, nbr_of_samples)) +
-    scale_x_continuous(breaks = seq(from = min(region$txStart), to = max(region$txEnd), by = 2500000))
+    scale_x_continuous(breaks = seq(from = min(region$txStart), to = max(region$txAdjustedEnd), by = 2500000))
+
 
   if (type == "gain") {
     gg <- gg + ylim(0, max(y + 2))
