@@ -51,8 +51,6 @@ run_app <- function(type = c("gain", "loss"), path = ".") {
         ## Render on screen
         print(gene_plot)
 
-        gg <<- gene_plot
-
         ## Save to image file, if not already done
         gene_name <- attr(gene_plot, "params")$gene_name
         name <- sprintf("SCNA2_5Mb_%s_%s", peak_name, gene_name)
