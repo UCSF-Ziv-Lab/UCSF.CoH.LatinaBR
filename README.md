@@ -32,20 +32,10 @@ $ ls -l -- *.csv *.txt
 
 ### Install this R package
 
-Because this R package is in a _private_ GitHub repository, it's a bit trickier to install it.  The easiest is to set up a [personal access token](https://github.com/settings/tokens) on GitHub;
-
-1. Go to <https://github.com/settings/tokens/new>
-2. Note: Enter 'remotes::install_github()' or something informative for you
-3. Expiration: Select 'No expiration'
-4. Select scopes: Check **repo** (leave everything else unchecked)
-5. Click 'Generate token'
-6. Write down the randomly generated hexadecimal token displayed (you won't see it later). It'll look something like `ghp_BaWRiMXYuF8CUT2n6SNrXTrqbLFVKpR95eR0`.
-
-Now, you can use that GitHub token whenever you want to install an R package from a _private_ GitHub repository.
+To install this package and all of its dependencies, do:
 
 ```r
-> if (!require("remotes")) install.packages("remotes")
-> remotes::install_github("UCSF-Ziv-Lab/UCSF.CoH.LatinaBR", auth_token = "ghp_BaWRiMXYuF8CUT2n6SNrXTrqbLFVKpR95eR0")
+if (!require("remotes")) install.packages("remotes")
+remotes::install_github("UCSF-Ziv-Lab/UCSF.CoH.LatinaBR")
 ```
 
-This will also install all other R packages required.  BTW, if the R package was in a _public_ GitHub repository, we would not have to use a token.
